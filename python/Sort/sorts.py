@@ -1,4 +1,3 @@
-import math
 import time
 import random
 
@@ -62,7 +61,7 @@ def insertSort(arr):
     return arr
 
 
-def shellSotr(arr):
+def shellSort(arr):
     """
     ShellSort 希尔排序
     :param arr: 待排序数组
@@ -101,19 +100,27 @@ def quickSortRecursion(arr, left, right):
             left += 1
         while arr[right] > mid:
             right -= 1
-        arr[left], arr[right] = arr[right], arr[left]
-    # 确定最终中间数值mid的位置
-    if arr[left] == mid:
-        MID = left
-    else:
-        MID = right
 
-    # 对划分后的左边区域和右边区域分别进行快速排序的递归
-    # 当左边或右边区域只剩下一个元素时，则无需再进行排序了
-    if (RIGHT - MID) > 1:
-        quickSortRecursion(arr, MID+1, RIGHT)
-    if (MID - LEFT) > 1:
-        quickSortRecursion(arr, LEFT, MID-1)
+        if left >= right:
+            break
+
+        arr[left], arr[right] = arr[right], arr[left]
+
+        # 先达到中间位置的一边继续移动（或者遇到与中间位置的数值相等），另一边暂停移动
+        if arr[left] == mid:
+            right -= 1
+        if arr[right] == mid:
+            left += 1
+
+    # 此时有一边已经完成排序，需要移动一个位置，否则会无限递归
+    if left == right:
+        left += 1
+        right -= 1
+
+    if LEFT < right:
+        quickSortRecursion(arr, LEFT, right)
+    if RIGHT > left:
+        quickSortRecursion(arr, left, RIGHT)
 
 
 def quickSort(arr):
@@ -127,15 +134,15 @@ def quickSort(arr):
 
 if __name__ == '__main__':
     # 检验算法的正确性
-    l = [8, 9, 1, 7, 2, 3, 5, 4, 6, 0]
+    l = [8, 9, 1, 7, 2, 0, 3, 5, -1, 6, 0]
     print(l)
     quickSort(l)
     print(l)
 
     # 检验算法的运行时间
-    n = 100000
+    n = 100
     l = [random.randint(0, n) for i in range(n)]
     s1 = time.time()
-    quickSort()
+    quickSort(l)
     s2 = time.time()
     print(s2 - s1)
